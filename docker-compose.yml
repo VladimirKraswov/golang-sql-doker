@@ -1,0 +1,53 @@
+
+version: '3.7'
+
+services:
+  db:
+    container_name: "test_db"
+    platform: linux/x86_64
+    build:
+      context: .
+      dockerfile: db.Dockerfile
+    networks:
+      - default
+    restart: always
+    ports:
+      # <Port exposed> : < MySQL Порт, работающий внутри контейнера>
+      - "3306:3306"
+    # Установка переменных env для создания базы данных
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "QWERTY"
+      MYSQL_DATABASE: "my_db"
+      MYSQL_USER: "vladimir"
+      MYSQL_PASSWORD: "QWERTY"
+      # Если вы хотите использовать "root" в качестве пользователя, просто раскоментите эти две строки
+      # MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      # MYSQL_DATABASE: ${DATABASE_NAME}
+
+    # we mount a data volume to make sure we don't lose data
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+  api:
+    container_name:  "test_api"
+    # Мы хотим использовать образ, созданный из нашего файла Dockerfile
+    build:
+      context: .
+      dockerfile: api.Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_HOST: "localhost"
+      DATABASE_PORT: 3306
+    # Мы зависим от серверной части mysql
+    depends_on:
+      - db
+    # Монтируем рабочий каталог в контейнер, что удобно для разработки
+    # Это то, что позволяет выполнять горячую перезагрузку внутри контейнера Docker
+    volumes:
+      - .:/app/
+
+networks:
+  default:
+volumes:
+  mysql_data:
