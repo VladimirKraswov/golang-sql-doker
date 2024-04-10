@@ -17,6 +17,7 @@ RUN go install -mod=mod github.com/githubnemo/CompileDaemon
 
 # Копируем все файлы и запускаем сборку
 COPY . .
+
 COPY ./entrypoint.sh /entrypoint.sh
 
 # для работы с wait-for требуется bash, который по умолчанию не поставляется с alpine. Вместо этого используйте wait-for
