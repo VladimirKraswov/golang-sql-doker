@@ -1,4 +1,4 @@
-module github.com/VladimirKraswov/golang-sql-doker
+module golang_sql_docker
 
 go 1.22.2
 
