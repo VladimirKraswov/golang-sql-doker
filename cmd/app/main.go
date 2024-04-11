@@ -79,14 +79,14 @@ func main() {
 
 	// Если эндпоинта нет перенаправим на главную страницу
 	router.GET("/", func(c *gin.Context) {
-		c.Redirect(http.StatusMovedPermanently, "public/")
+		c.Redirect(http.StatusMovedPermanently, "web/")
 	})
 
 	// Эндпоинты
 	router.GET("/users", userPage)
 	router.POST("/users", addUser)
 	// Статические файлы
-	router.StaticFS("/public", http.Dir("./public"))
+	router.StaticFS("/web", http.Dir("./web"))
 
 	// Запускаем сервер
 	router.Run(":8080")
